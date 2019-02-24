@@ -1,6 +1,6 @@
-package com.scheffer.erik.financial.api.models.apimodels
+package com.scheffer.erik.financial.api.model.apimodels
 
-import com.scheffer.erik.financial.api.models.Category
+import com.scheffer.erik.financial.api.model.Category
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 

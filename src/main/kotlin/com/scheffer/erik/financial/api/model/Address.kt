@@ -1,4 +1,4 @@
-package com.scheffer.erik.financial.api.models
+package com.scheffer.erik.financial.api.model
 
 import javax.persistence.Embeddable
 import javax.validation.constraints.Size

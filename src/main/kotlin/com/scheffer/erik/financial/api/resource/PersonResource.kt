@@ -1,8 +1,8 @@
 package com.scheffer.erik.financial.api.resource
 
 import com.scheffer.erik.financial.api.events.CreatedResourceEvent
-import com.scheffer.erik.financial.api.models.Person
-import com.scheffer.erik.financial.api.models.apimodels.PersonApi
+import com.scheffer.erik.financial.api.model.Person
+import com.scheffer.erik.financial.api.model.apimodels.PersonApi
 import com.scheffer.erik.financial.api.repositories.PersonRepository
 import com.scheffer.erik.financial.api.service.PersonService
 import org.springframework.context.ApplicationEventPublisher
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.DeleteMapping
-import javax.validation.constraints.NotNull
 
 
 @RestController

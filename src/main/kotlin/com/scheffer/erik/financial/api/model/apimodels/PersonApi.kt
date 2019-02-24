@@ -1,7 +1,7 @@
-package com.scheffer.erik.financial.api.models.apimodels
+package com.scheffer.erik.financial.api.model.apimodels
 
-import com.scheffer.erik.financial.api.models.Address
-import com.scheffer.erik.financial.api.models.Person
+import com.scheffer.erik.financial.api.model.Address
+import com.scheffer.erik.financial.api.model.Person
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size

@@ -1,6 +1,6 @@
 package com.scheffer.erik.financial.api.service
 
-import com.scheffer.erik.financial.api.models.Person
+import com.scheffer.erik.financial.api.model.Person
 import com.scheffer.erik.financial.api.repositories.PersonRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service

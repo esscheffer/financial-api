@@ -2,14 +2,13 @@ package com.scheffer.erik.financial.api.resource
 
 import com.scheffer.erik.financial.api.events.CreatedResourceEvent
 import com.scheffer.erik.financial.api.exceptionhandler.DuplicateException
-import com.scheffer.erik.financial.api.models.Category
-import com.scheffer.erik.financial.api.models.apimodels.CategoryApi
+import com.scheffer.erik.financial.api.model.Category
+import com.scheffer.erik.financial.api.model.apimodels.CategoryApi
 import com.scheffer.erik.financial.api.repositories.CategoryRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
