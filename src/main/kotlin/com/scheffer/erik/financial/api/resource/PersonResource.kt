@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.DeleteMapping
 
 
 @RestController
@@ -26,11 +24,11 @@ class PersonResource(private val personRepository: PersonRepository,
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody personApi: PersonApi, response: HttpServletResponse): ResponseEntity<Person> {
-        val saved = personRepository.save(personApi.toPerson())
-        publisher.publishEvent(CreatedResourceEvent(this, response, saved.id))
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved)
-    }
+    fun create(@Valid @RequestBody personApi: PersonApi, response: HttpServletResponse) =
+            personRepository.save(personApi.toPerson()).let {
+                publisher.publishEvent(CreatedResourceEvent(this, response, it.id))
+                ResponseEntity.status(HttpStatus.CREATED).body(it)
+            }
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long, response: HttpServletResponse) =

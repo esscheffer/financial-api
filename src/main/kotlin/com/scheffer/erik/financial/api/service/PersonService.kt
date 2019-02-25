@@ -7,19 +7,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class PersonService(private val personRepository: PersonRepository) {
-    fun update(id: Long, person: Person): Person {
-        val saved = findPersonById(id)
-        return personRepository.save(person.copy(id = saved.id))
-    }
+    fun update(id: Long, person: Person) = personRepository.save(person.copy(id = findPersonById(id).id))
 
     fun updateActive(id: Long, active: Boolean) =
             personRepository.save(findPersonById(id).apply { this.active = active })
 
-    private fun findPersonById(id: Long): Person {
-        val saved = personRepository.findById(id)
-        if (!saved.isPresent) {
-            throw EmptyResultDataAccessException(1)
-        }
-        return saved.get()
-    }
+    private fun findPersonById(id: Long) =
+            personRepository.findById(id).let { if (!it.isPresent) throw EmptyResultDataAccessException(1) else it.get() }
 }

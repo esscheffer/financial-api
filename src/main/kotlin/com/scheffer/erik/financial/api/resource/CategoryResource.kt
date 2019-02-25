@@ -1,10 +1,10 @@
 package com.scheffer.erik.financial.api.resource
 
 import com.scheffer.erik.financial.api.events.CreatedResourceEvent
-import com.scheffer.erik.financial.api.exceptionhandler.DuplicateException
 import com.scheffer.erik.financial.api.model.Category
 import com.scheffer.erik.financial.api.model.apimodels.CategoryApi
 import com.scheffer.erik.financial.api.repositories.CategoryRepository
+import com.scheffer.erik.financial.api.service.CategoryService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,6 +15,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/categories")
 class CategoryResource(private val categoryRepository: CategoryRepository,
+                       private val categoryService: CategoryService,
                        private val publisher: ApplicationEventPublisher) {
 
     @GetMapping
@@ -22,14 +23,11 @@ class CategoryResource(private val categoryRepository: CategoryRepository,
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody categoryApi: CategoryApi, response: HttpServletResponse): ResponseEntity<Category> {
-        if (categoryRepository.findByName(categoryApi.name!!) != null) {
-            throw DuplicateException("Category", "Name")
-        }
-        val saved = categoryRepository.save(categoryApi.toCategory())
-        publisher.publishEvent(CreatedResourceEvent(this, response, saved.id))
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved)
-    }
+    fun create(@Valid @RequestBody categoryApi: CategoryApi, response: HttpServletResponse) =
+            categoryService.save(categoryApi.toCategory()).let {
+                publisher.publishEvent(CreatedResourceEvent(this, response, it.id))
+                ResponseEntity.status(HttpStatus.CREATED).body(it)
+            }
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long, response: HttpServletResponse) =
