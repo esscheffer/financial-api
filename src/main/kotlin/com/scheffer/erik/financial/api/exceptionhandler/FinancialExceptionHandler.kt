@@ -1,5 +1,6 @@
 package com.scheffer.erik.financial.api.exceptionhandler
 
+import com.scheffer.erik.financial.api.exceptions.DuplicateException
 import com.scheffer.erik.financial.api.util.getMessage
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.context.MessageSource
@@ -46,7 +47,7 @@ class FinancialExceptionHandler(private val messageSource: MessageSource)
     fun handleDuplicate(ex: DuplicateException): ResponseEntity<List<ErrorMessageWrapper>> {
         val message = messageSource.getMessage("message.duplicate.errorMessage",
                 arrayOf(ex.tableName, ex.duplicatedField), LocaleContextHolder.getLocale())
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(listOf(ErrorMessageWrapper(message, message)))
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(listOf(ErrorMessageWrapper(message, ex.toString())))
     }
 
     @ExceptionHandler(EmptyResultDataAccessException::class)

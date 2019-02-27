@@ -1,0 +1,17 @@
+package com.scheffer.erik.financial.api.service
+
+import com.scheffer.erik.financial.api.exceptions.PersonInactiveException
+import com.scheffer.erik.financial.api.model.FinancialEntry
+import com.scheffer.erik.financial.api.repositories.FinancialEntryRepository
+import com.scheffer.erik.financial.api.repositories.PersonRepository
+import org.springframework.stereotype.Service
+
+@Service
+class FinancialEntryService(private val financialEntryRepository: FinancialEntryRepository,
+                            private val personRepository: PersonRepository) {
+    fun save(financialEntry: FinancialEntry): FinancialEntry {
+        val person = personRepository.findById(financialEntry.person.id ?: -1)
+        person.ifPresent { if (!it.active) throw PersonInactiveException() }
+        return financialEntryRepository.save(financialEntry)
+    }
+}

@@ -1,6 +1,6 @@
 package com.scheffer.erik.financial.api.service
 
-import com.scheffer.erik.financial.api.exceptionhandler.DuplicateException
+import com.scheffer.erik.financial.api.exceptions.DuplicateException
 import com.scheffer.erik.financial.api.model.Category
 import com.scheffer.erik.financial.api.repositories.CategoryRepository
 import org.springframework.stereotype.Service
