@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service
 class FinancialEntryService(private val financialEntryRepository: FinancialEntryRepository,
                             private val personRepository: PersonRepository) {
     fun save(financialEntry: FinancialEntry): FinancialEntry {
-        val person = personRepository.findById(financialEntry.person.id ?: -1)
-        person.ifPresent { if (!it.active) throw PersonInactiveException() }
+        personRepository.findById(financialEntry.person.id ?: -1)
+                .ifPresent { if (!it.active) throw PersonInactiveException() }
         return financialEntryRepository.save(financialEntry)
     }
 }
