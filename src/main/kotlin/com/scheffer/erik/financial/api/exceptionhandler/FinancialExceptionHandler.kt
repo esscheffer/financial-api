@@ -1,8 +1,10 @@
 package com.scheffer.erik.financial.api.exceptionhandler
 
 import com.scheffer.erik.financial.api.util.getMessage
+import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -53,6 +55,15 @@ class FinancialExceptionHandler(private val messageSource: MessageSource)
                     listOf(ErrorMessageWrapper(messageSource.getMessage("resource.notFound"), ex.toString())),
                     HttpHeaders(),
                     HttpStatus.NOT_FOUND,
+                    request)
+
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handleDataIntegrityViolationException(ex: DataIntegrityViolationException, request: WebRequest) =
+            handleExceptionInternal(ex,
+                    listOf(ErrorMessageWrapper(messageSource.getMessage("resource.operation-not-allowed"),
+                            ExceptionUtils.getRootCauseMessage(ex))),
+                    HttpHeaders(),
+                    HttpStatus.BAD_REQUEST,
                     request)
 
     private fun createErrorMessageWrappers(bindingResult: BindingResult) =

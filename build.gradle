@@ -25,6 +25,7 @@ dependencies {
     implementation 'mysql:mysql-connector-java'
     implementation "org.flywaydb:flyway-core:5.2.4"
     implementation 'org.hibernate:hibernate-java8'
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
 
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
