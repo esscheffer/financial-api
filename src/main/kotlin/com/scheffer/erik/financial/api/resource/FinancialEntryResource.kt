@@ -42,6 +42,10 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
             }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun remover(@PathVariable id: Long) = financialEntryRepository.deleteById(id)
+
     @ExceptionHandler(PersonInactiveException::class)
     fun handlePersonInactiveException(ex: PersonInactiveException): ResponseEntity<Any> {
         val userMessage = messageSource.getMessage("person.person-inactive", null, LocaleContextHolder.getLocale())

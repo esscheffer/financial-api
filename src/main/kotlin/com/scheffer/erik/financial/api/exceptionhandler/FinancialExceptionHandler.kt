@@ -53,7 +53,7 @@ class FinancialExceptionHandler(private val messageSource: MessageSource)
     @ExceptionHandler(EmptyResultDataAccessException::class)
     fun handleEmptyResultDataAccessException(ex: EmptyResultDataAccessException, request: WebRequest) =
             handleExceptionInternal(ex,
-                    listOf(ErrorMessageWrapper(messageSource.getMessage("resource.notFound"), ex.toString())),
+                    listOf(ErrorMessageWrapper(messageSource.getMessage("resource.not-found"), ex.toString())),
                     HttpHeaders(),
                     HttpStatus.NOT_FOUND,
                     request)
