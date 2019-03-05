@@ -5,7 +5,8 @@ import com.scheffer.erik.financial.api.exceptionhandler.FinancialExceptionHandle
 import com.scheffer.erik.financial.api.exceptions.PersonInactiveException
 import com.scheffer.erik.financial.api.model.FinancialEntry
 import com.scheffer.erik.financial.api.model.apimodels.FinancialEntryApi
-import com.scheffer.erik.financial.api.repositories.FinancialEntryRepository
+import com.scheffer.erik.financial.api.repository.FinancialEntryRepository
+import com.scheffer.erik.financial.api.repository.filter.FinancialEntryFilter
 import com.scheffer.erik.financial.api.service.FinancialEntryService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.MessageSource
@@ -24,7 +25,8 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
                              private val publisher: ApplicationEventPublisher,
                              private val messageSource: MessageSource) {
     @GetMapping
-    fun list(): MutableList<FinancialEntry> = financialEntryRepository.findAll()
+    fun search(financialEntryFilter: FinancialEntryFilter): List<FinancialEntry> =
+            financialEntryRepository.filter(financialEntryFilter)
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long, response: HttpServletResponse) =

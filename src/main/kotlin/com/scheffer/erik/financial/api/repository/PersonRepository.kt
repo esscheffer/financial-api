@@ -1,4 +1,4 @@
-package com.scheffer.erik.financial.api.repositories
+package com.scheffer.erik.financial.api.repository
 
 import com.scheffer.erik.financial.api.model.Person
 import org.springframework.data.jpa.repository.JpaRepository

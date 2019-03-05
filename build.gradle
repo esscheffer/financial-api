@@ -6,6 +6,7 @@ plugins {
 }
 
 apply plugin: 'kotlin-jpa'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.scheffer.erik.financial-api'
@@ -29,6 +30,8 @@ dependencies {
 
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    kapt "org.hibernate:hibernate-jpamodelgen"
 }
 
 compileKotlin {

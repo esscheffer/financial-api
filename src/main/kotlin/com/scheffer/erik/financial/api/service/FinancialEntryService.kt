@@ -2,8 +2,8 @@ package com.scheffer.erik.financial.api.service
 
 import com.scheffer.erik.financial.api.exceptions.PersonInactiveException
 import com.scheffer.erik.financial.api.model.FinancialEntry
-import com.scheffer.erik.financial.api.repositories.FinancialEntryRepository
-import com.scheffer.erik.financial.api.repositories.PersonRepository
+import com.scheffer.erik.financial.api.repository.FinancialEntryRepository
+import com.scheffer.erik.financial.api.repository.PersonRepository
 import org.springframework.stereotype.Service
 
 @Service

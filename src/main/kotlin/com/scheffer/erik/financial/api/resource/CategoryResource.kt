@@ -3,7 +3,7 @@ package com.scheffer.erik.financial.api.resource
 import com.scheffer.erik.financial.api.events.CreatedResourceEvent
 import com.scheffer.erik.financial.api.model.Category
 import com.scheffer.erik.financial.api.model.apimodels.CategoryApi
-import com.scheffer.erik.financial.api.repositories.CategoryRepository
+import com.scheffer.erik.financial.api.repository.CategoryRepository
 import com.scheffer.erik.financial.api.service.CategoryService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.HttpStatus
