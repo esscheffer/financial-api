@@ -4,6 +4,9 @@ import com.scheffer.erik.financial.api.model.FinancialEntry
 import com.scheffer.erik.financial.api.model.FinancialEntry_
 import com.scheffer.erik.financial.api.repository.filter.FinancialEntryFilter
 import com.scheffer.erik.financial.api.util.ifNotNullOrEmpty
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import java.util.*
 import javax.persistence.EntityManager
@@ -13,19 +16,23 @@ import javax.persistence.criteria.Root
 
 @Repository
 class FinancialEntryRepositoryImpl(private val entityManager: EntityManager) : FinancialEntryRepositoryQuery {
-    override fun filter(financialEntryFilter: FinancialEntryFilter): List<FinancialEntry> {
+    override fun filter(financialEntryFilter: FinancialEntryFilter, pageable: Pageable): Page<FinancialEntry> {
         val builder = entityManager.criteriaBuilder
         val criteria = builder.createQuery(FinancialEntry::class.java)
         val root = criteria.from(FinancialEntry::class.java)
 
-        val predicates = createRestrictions(financialEntryFilter, builder, root)
-        criteria.where(*predicates)
+        criteria.where(*createCriteriaRestrictions(financialEntryFilter, builder, root))
 
-        return entityManager.createQuery<FinancialEntry>(criteria).resultList
+        val query = entityManager.createQuery<FinancialEntry>(criteria)
+                .setFirstResult(pageable.pageNumber * pageable.pageSize)
+                .setMaxResults(pageable.pageSize)
+
+        return PageImpl(query.resultList,
+                pageable, countTotal(financialEntryFilter))
     }
 
-    private fun createRestrictions(financialEntryFilter: FinancialEntryFilter, builder: CriteriaBuilder,
-                                   root: Root<FinancialEntry>): Array<Predicate> {
+    private fun createCriteriaRestrictions(financialEntryFilter: FinancialEntryFilter, builder: CriteriaBuilder,
+                                           root: Root<FinancialEntry>): Array<Predicate> {
         val predicates = ArrayList<Predicate>()
 
         ifNotNullOrEmpty(financialEntryFilter.description) {
@@ -42,5 +49,15 @@ class FinancialEntryRepositoryImpl(private val entityManager: EntityManager) : F
         }
 
         return predicates.toTypedArray()
+    }
+
+    private fun countTotal(financialEntryFilter: FinancialEntryFilter): Long {
+        val builder = entityManager.criteriaBuilder
+        val criteria = builder.createQuery(Long::class.java)
+        val root = criteria.from(FinancialEntry::class.java)
+
+        criteria.select(builder.count(root))
+                .where(*createCriteriaRestrictions(financialEntryFilter, builder, root))
+        return entityManager.createQuery(criteria).singleResult
     }
 }

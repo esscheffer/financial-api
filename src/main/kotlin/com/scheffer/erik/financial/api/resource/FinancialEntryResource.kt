@@ -3,7 +3,6 @@ package com.scheffer.erik.financial.api.resource
 import com.scheffer.erik.financial.api.events.CreatedResourceEvent
 import com.scheffer.erik.financial.api.exceptionhandler.FinancialExceptionHandler
 import com.scheffer.erik.financial.api.exceptions.PersonInactiveException
-import com.scheffer.erik.financial.api.model.FinancialEntry
 import com.scheffer.erik.financial.api.model.apimodels.FinancialEntryApi
 import com.scheffer.erik.financial.api.repository.FinancialEntryRepository
 import com.scheffer.erik.financial.api.repository.filter.FinancialEntryFilter
@@ -11,6 +10,7 @@ import com.scheffer.erik.financial.api.service.FinancialEntryService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -25,8 +25,8 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
                              private val publisher: ApplicationEventPublisher,
                              private val messageSource: MessageSource) {
     @GetMapping
-    fun search(financialEntryFilter: FinancialEntryFilter): List<FinancialEntry> =
-            financialEntryRepository.filter(financialEntryFilter)
+    fun search(financialEntryFilter: FinancialEntryFilter, pageable: Pageable) =
+            financialEntryRepository.filter(financialEntryFilter, pageable)
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long, response: HttpServletResponse) =
