@@ -20,7 +20,6 @@ class AppUserDetailsService(private val userRepository: UserRepository,
     override fun loadUserByUsername(email: String): UserDetails {
         val user = userRepository.findByEmail(email)
                 ?: throw UsernameNotFoundException(messageSource.getMessage("message.userNameNotFound"))
-        SystemUser(user, getPermissions(user))
         return SystemUser(user, getPermissions(user))
     }
 
