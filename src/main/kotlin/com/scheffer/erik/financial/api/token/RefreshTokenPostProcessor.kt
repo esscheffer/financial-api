@@ -1,5 +1,6 @@
 package com.scheffer.erik.financial.api.token
 
+import com.scheffer.erik.financial.api.config.property.FinancialApiProperty
 import org.springframework.core.MethodParameter
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
@@ -14,7 +15,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 import javax.servlet.http.Cookie
 
 @ControllerAdvice
-class RefreshTokenPostProcessor : ResponseBodyAdvice<OAuth2AccessToken> {
+class RefreshTokenPostProcessor(val financialApiProperty: FinancialApiProperty)
+    : ResponseBodyAdvice<OAuth2AccessToken> {
     override fun supports(returnType: MethodParameter, converterType: Class<out HttpMessageConverter<*>>) =
             returnType.method?.name == "postAccessToken"
 
@@ -38,7 +40,7 @@ class RefreshTokenPostProcessor : ResponseBodyAdvice<OAuth2AccessToken> {
     private fun createCookieWithRefreshToken(refreshToken: String, path: String) =
             Cookie("refreshToken", refreshToken).apply {
                 isHttpOnly = true
-                secure = true
+                secure = financialApiProperty.security.enableHttps
                 this.path = path
                 maxAge = 2592000
             }
