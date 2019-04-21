@@ -1,8 +1,11 @@
 package com.scheffer.erik.financial.api.repository.financialentry
 
+import com.scheffer.erik.financial.api.model.Category_
 import com.scheffer.erik.financial.api.model.FinancialEntry
 import com.scheffer.erik.financial.api.model.FinancialEntry_
+import com.scheffer.erik.financial.api.model.Person_
 import com.scheffer.erik.financial.api.repository.filter.FinancialEntryFilter
+import com.scheffer.erik.financial.api.repository.projection.FinancialEntrySummary
 import com.scheffer.erik.financial.api.util.ifNotNullOrEmpty
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -11,8 +14,10 @@ import org.springframework.stereotype.Repository
 import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.criteria.CriteriaBuilder
+import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
+
 
 @Repository
 class FinancialEntryRepositoryImpl(private val entityManager: EntityManager) : FinancialEntryRepositoryQuery {
@@ -23,11 +28,28 @@ class FinancialEntryRepositoryImpl(private val entityManager: EntityManager) : F
 
         criteria.where(*createCriteriaRestrictions(financialEntryFilter, builder, root))
 
-        val query = entityManager.createQuery<FinancialEntry>(criteria)
-                .setFirstResult(pageable.pageNumber * pageable.pageSize)
-                .setMaxResults(pageable.pageSize)
+        return PageImpl(getPaginatedQuery(criteria, pageable).resultList,
+                pageable, countTotal(financialEntryFilter))
+    }
 
-        return PageImpl(query.resultList,
+    override fun summary(financialEntryFilter: FinancialEntryFilter, pageable: Pageable): Page<FinancialEntrySummary> {
+        val builder = entityManager.criteriaBuilder
+        val criteria = builder.createQuery(FinancialEntrySummary::class.java)
+        val root = criteria.from(FinancialEntry::class.java)
+
+        criteria.select(builder.construct(FinancialEntrySummary::class.java,
+                root.get(FinancialEntry_.id),
+                root.get(FinancialEntry_.entryDescription),
+                root.get(FinancialEntry_.dueDate),
+                root.get(FinancialEntry_.paymentDate),
+                root.get(FinancialEntry_.entryValue),
+                root.get(FinancialEntry_.type),
+                root.get(FinancialEntry_.category).get(Category_.name),
+                root.get(FinancialEntry_.person).get(Person_.name)))
+
+        criteria.where(*createCriteriaRestrictions(financialEntryFilter, builder, root))
+
+        return PageImpl(getPaginatedQuery(criteria, pageable).resultList,
                 pageable, countTotal(financialEntryFilter))
     }
 
@@ -60,4 +82,9 @@ class FinancialEntryRepositoryImpl(private val entityManager: EntityManager) : F
                 .where(*createCriteriaRestrictions(financialEntryFilter, builder, root))
         return entityManager.createQuery(criteria).singleResult
     }
+
+    private fun <T> getPaginatedQuery(criteriaQuery: CriteriaQuery<T>, pageable: Pageable) =
+            entityManager.createQuery<T>(criteriaQuery)
+                    .setFirstResult(pageable.pageNumber * pageable.pageSize)
+                    .setMaxResults(pageable.pageSize)
 }

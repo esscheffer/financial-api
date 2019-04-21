@@ -28,6 +28,10 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
     fun search(financialEntryFilter: FinancialEntryFilter, pageable: Pageable) =
             financialEntryRepository.filter(financialEntryFilter, pageable)
 
+    @GetMapping(params = ["summary"])
+    fun summary(financialEntryFilter: FinancialEntryFilter, pageable: Pageable) =
+            financialEntryRepository.summary(financialEntryFilter, pageable)
+
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long, response: HttpServletResponse) =
             financialEntryRepository.findById(id).let {
