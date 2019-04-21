@@ -26,7 +26,7 @@ CREATE TABLE user_permission
 
 INSERT INTO user
 values (1, 'Administrator', 'admin@test.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.'),
-       (2, 'ApiUser One', 'user@test.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+       (2, 'ApiUser One', 'user@test.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.');
 
 INSERT INTO permission
 values (1, 'ROLE_REGISTER_CATEGORY'),
