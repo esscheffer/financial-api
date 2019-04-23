@@ -51,3 +51,7 @@ compileTestKotlin {
         jvmTarget = '1.8'
     }
 }
+
+springBoot {
+    mainClassName = 'com.scheffer.erik.financial.api.FinancialApiApplicationKt'
+}
