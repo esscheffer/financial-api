@@ -10,7 +10,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.scheffer.erik.financial-api'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '1.8'
 
 repositories {
