@@ -13,7 +13,6 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
-import java.util.*
 
 @Configuration
 @EnableAuthorizationServer
@@ -33,7 +32,7 @@ class AuthorizationServerConfig(private val authenticationManager: Authenticatio
 
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer) {
         val tokenEnhancerChain = TokenEnhancerChain().apply {
-            setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()))
+            setTokenEnhancers(listOf(tokenEnhancer(), accessTokenConverter()))
         }
 
         endpoints.tokenStore(tokenStore())

@@ -1,11 +1,12 @@
 package com.scheffer.erik.financial.api.resource
 
 import com.scheffer.erik.financial.api.events.CreatedResourceEvent
-import com.scheffer.erik.financial.api.model.Person
 import com.scheffer.erik.financial.api.model.apimodels.PersonApi
 import com.scheffer.erik.financial.api.repository.PersonRepository
+import com.scheffer.erik.financial.api.repository.filter.PersonFilter
 import com.scheffer.erik.financial.api.service.PersonService
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -20,7 +21,8 @@ class PersonResource(private val personRepository: PersonRepository,
                      private val personService: PersonService) {
 
     @GetMapping
-    fun list(): List<Person> = personRepository.findAll()
+    fun search(personFilter: PersonFilter, pageable: Pageable) =
+            personRepository.filter(personFilter, pageable)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
