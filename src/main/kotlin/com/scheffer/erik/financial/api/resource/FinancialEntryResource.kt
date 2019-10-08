@@ -46,6 +46,10 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
             }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody financialEntryApi: FinancialEntryApi) =
+            ResponseEntity.ok(financialEntryService.update(id, financialEntryApi.toFinancialEntry()))
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remover(@PathVariable id: Long) = financialEntryRepository.deleteById(id)

@@ -20,7 +20,7 @@ class CategoryResource(private val categoryRepository: CategoryRepository,
                        private val publisher: ApplicationEventPublisher) {
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_SEARCH_CATEGORY') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAuthority('ROLE_SEARCH_CATEGORY') and #oauth2.hasScope('write')")
     fun list(): List<Category> = categoryRepository.findAll()
 
     @PostMapping
