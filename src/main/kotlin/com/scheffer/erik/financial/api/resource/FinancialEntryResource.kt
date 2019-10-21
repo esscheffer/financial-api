@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -25,14 +26,17 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
                              private val publisher: ApplicationEventPublisher,
                              private val messageSource: MessageSource) {
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_FINANCIAL_ENTRY') and #oauth2.hasScope('read')")
     fun search(financialEntryFilter: FinancialEntryFilter, pageable: Pageable) =
             financialEntryRepository.filter(financialEntryFilter, pageable)
 
     @GetMapping(params = ["summary"])
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_FINANCIAL_ENTRY') and #oauth2.hasScope('read')")
     fun summary(financialEntryFilter: FinancialEntryFilter, pageable: Pageable) =
             financialEntryRepository.summary(financialEntryFilter, pageable)
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_FINANCIAL_ENTRY') and #oauth2.hasScope('read')")
     fun getById(@PathVariable id: Long, response: HttpServletResponse) =
             financialEntryRepository.findById(id).let {
                 if (it.isPresent) ResponseEntity.ok(it.get()) else ResponseEntity.notFound().build()
@@ -40,6 +44,7 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ROLE_REGISTER_FINANCIAL_ENTRY') and #oauth2.hasScope('write')")
     fun create(@Valid @RequestBody financialEntryApi: FinancialEntryApi, response: HttpServletResponse) =
             financialEntryService.save(financialEntryApi.toFinancialEntry()).let {
                 publisher.publishEvent(CreatedResourceEvent(this, response, it.id))
@@ -47,11 +52,13 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
             }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_REGISTER_FINANCIAL_ENTRY') and #oauth2.hasScope('write')")
     fun update(@PathVariable id: Long, @RequestBody financialEntryApi: FinancialEntryApi) =
             ResponseEntity.ok(financialEntryService.update(id, financialEntryApi.toFinancialEntry()))
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ROLE_REMOVE_FINANCIAL_ENTRY') and #oauth2.hasScope('write')")
     fun remover(@PathVariable id: Long) = financialEntryRepository.deleteById(id)
 
     @ExceptionHandler(PersonInactiveException::class)

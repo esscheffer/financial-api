@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
-
 @Service
 class AppUserDetailsService(private val userRepository: UserRepository,
                             private val messageSource: MessageSource) : UserDetailsService {
