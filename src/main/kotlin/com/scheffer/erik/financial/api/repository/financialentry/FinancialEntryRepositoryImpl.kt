@@ -1,5 +1,7 @@
 package com.scheffer.erik.financial.api.repository.financialentry
 
+import com.scheffer.erik.financial.api.dto.FinancialEntryStatisticCategory
+import com.scheffer.erik.financial.api.dto.FinancialEntryStatisticDay
 import com.scheffer.erik.financial.api.model.Category_
 import com.scheffer.erik.financial.api.model.FinancialEntry
 import com.scheffer.erik.financial.api.model.FinancialEntry_
@@ -11,6 +13,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.criteria.CriteriaBuilder
@@ -51,6 +55,42 @@ class FinancialEntryRepositoryImpl(private val entityManager: EntityManager) : F
 
         return PageImpl(getPaginatedQuery(criteria, pageable).resultList,
                 pageable, countTotal(financialEntryFilter))
+    }
+
+    override fun byCategory(referenceMonth: LocalDate): List<FinancialEntryStatisticCategory> {
+        val builder = entityManager.criteriaBuilder
+        val criteria = builder.createQuery(FinancialEntryStatisticCategory::class.java)
+        val root: Root<FinancialEntry> = criteria.from(FinancialEntry::class.java)
+
+        val firstDayOfMonth = referenceMonth.with(TemporalAdjusters.firstDayOfMonth())
+        val lastDayOfMonth = referenceMonth.with(TemporalAdjusters.lastDayOfMonth())
+
+        criteria.select(builder.construct(FinancialEntryStatisticCategory::class.java,
+                root.get(FinancialEntry_.category), builder.sum(root.get(FinancialEntry_.entryValue))))
+                .where(builder.greaterThanOrEqualTo(root.get(FinancialEntry_.dueDate), firstDayOfMonth),
+                        builder.lessThanOrEqualTo(root.get(FinancialEntry_.dueDate), lastDayOfMonth))
+                .groupBy(root.get(FinancialEntry_.category))
+
+        return entityManager.createQuery(criteria).resultList
+    }
+
+    override fun byDay(referenceMonth: LocalDate): List<FinancialEntryStatisticDay> {
+        val builder = entityManager.criteriaBuilder
+        val criteria = builder.createQuery(FinancialEntryStatisticDay::class.java)
+        val root: Root<FinancialEntry> = criteria.from(FinancialEntry::class.java)
+
+        val firstDayOfMonth = referenceMonth.with(TemporalAdjusters.firstDayOfMonth())
+        val lastDayOfMonth = referenceMonth.with(TemporalAdjusters.lastDayOfMonth())
+
+        criteria.select(builder.construct(FinancialEntryStatisticDay::class.java,
+                root.get(FinancialEntry_.type),
+                root.get(FinancialEntry_.dueDate),
+                builder.sum(root.get(FinancialEntry_.entryValue))))
+                .where(builder.greaterThanOrEqualTo(root.get(FinancialEntry_.dueDate), firstDayOfMonth),
+                        builder.lessThanOrEqualTo(root.get(FinancialEntry_.dueDate), lastDayOfMonth))
+                .groupBy(root.get(FinancialEntry_.type), root.get(FinancialEntry_.dueDate))
+
+        return entityManager.createQuery(criteria).resultList
     }
 
     private fun createCriteriaRestrictions(financialEntryFilter: FinancialEntryFilter, builder: CriteriaBuilder,

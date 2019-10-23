@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
@@ -25,6 +26,14 @@ class FinancialEntryResource(private val financialEntryRepository: FinancialEntr
                              private val financialEntryService: FinancialEntryService,
                              private val publisher: ApplicationEventPublisher,
                              private val messageSource: MessageSource) {
+    @GetMapping("/statistics/byCategory")
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_FINANCIAL_ENTRY') and #oauth2.hasScope('read')")
+    fun byCategory() = financialEntryRepository.byCategory(LocalDate.now())
+
+    @GetMapping("/statistics/byDay")
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_FINANCIAL_ENTRY') and #oauth2.hasScope('read')")
+    fun byDay() = financialEntryRepository.byDay(LocalDate.now())
+
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_SEARCH_FINANCIAL_ENTRY') and #oauth2.hasScope('read')")
     fun search(financialEntryFilter: FinancialEntryFilter, pageable: Pageable) =
