@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body style="font-family: Arial,serif; font-size: 14px;">
+
+<p>Hello!</p>
+
+<p>There financial entries due today:</p>
+
+<p>
+<table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
+    <thead>
+    <tr>
+        <th>Type</th>
+        <th>Person</th>
+        <th>Description</th>
+        <th>Due date</th>
+        <th>Valor</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"
+        th:each="financialEntry: ${financialEntries}"
+        th:styleappend="${financialEntry.income} ? 'color: blue;' : 'color: red;'">
+        <td th:text="${financialEntry.type.description}">Receita</td>
+        <td th:text="${financialEntry.person.name}">João Silva</td>
+        <td th:text="${financialEntry.entryDescription}">Salário mensal</td>
+        <td th:text="${#temporals.format(financialEntry.dueDate, 'dd/MM/yyyy')}"
+            style="text-align: center">10/06/2017
+        </td>
+        <td th:text="${#numbers.formatDecimal(financialEntry.entryValue, 0, 'POINT', 2, 'COMMA')}"
+            style="text-align: right">R$ 10.000,00
+        </td>
+    </tr>
+    </tbody>
+</table>
+</p>
+
+<p>Thank you.</p>
+
+</body>
+</html>

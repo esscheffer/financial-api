@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserRepository : JpaRepository<ApiUser, Long> {
     fun findByEmail(email: String): ApiUser?
+
+    fun findByPermissionsDescription(permissionDescription: String): List<ApiUser>
 }
