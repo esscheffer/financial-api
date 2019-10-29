@@ -29,7 +29,7 @@ class PersonResource(private val personRepository: PersonRepository,
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ROLE_REGISTER_PERSON') and #oauth2.hasScope('write')")
     fun create(@Valid @RequestBody personApi: PersonApi, response: HttpServletResponse) =
-            personRepository.save(personApi.toPerson()).let {
+            personService.save(personApi.toPerson()).let {
                 publisher.publishEvent(CreatedResourceEvent(this, response, it.id))
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
             }

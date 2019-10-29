@@ -1,5 +1,6 @@
 package com.scheffer.erik.financial.api.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.scheffer.erik.financial.api.model.enumerations.FinancialEntryType
 import org.codehaus.jackson.annotate.JsonIgnore
 import java.math.BigDecimal
@@ -19,7 +20,7 @@ data class FinancialEntry(
         var observation: String?,
         @Enumerated(EnumType.STRING) var type: FinancialEntryType,
         @ManyToOne @JoinColumn(name = "id_category") var category: Category,
-        @ManyToOne @JoinColumn(name = "id_person") var person: Person) {
+        @JsonIgnoreProperties("contacts") @ManyToOne @JoinColumn(name = "id_person") var person: Person) {
 
     @JsonIgnore
     fun isIncome() = type == FinancialEntryType.INCOME
