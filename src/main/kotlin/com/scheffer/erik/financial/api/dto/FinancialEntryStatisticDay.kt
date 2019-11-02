@@ -5,5 +5,5 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class FinancialEntryStatisticDay(val financialEntryType: FinancialEntryType,
-                                      val dat: LocalDate,
+                                      val date: LocalDate,
                                       val total: BigDecimal)
