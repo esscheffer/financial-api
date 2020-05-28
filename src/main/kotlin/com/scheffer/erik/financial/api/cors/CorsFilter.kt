@@ -17,7 +17,7 @@ class CorsFilter : Filter {
         val request = req as HttpServletRequest
         val response = resp as HttpServletResponse
 
-        response.setHeader("Access-Control-Allow-Origin", "https://erik-financial-api.herokuapp.com")
+        response.setHeader("Access-Control-Allow-Origin", "https://erik-financial-app-ui.herokuapp.com")
         response.setHeader("Access-Control-Allow-Credentials", "true")
 
         if (request.method == "OPTIONS") {
