@@ -20,6 +20,8 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
     }
 
     override fun configure(resources: ResourceServerSecurityConfigurer) {
