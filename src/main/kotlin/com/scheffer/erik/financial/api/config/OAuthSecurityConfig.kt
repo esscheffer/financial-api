@@ -25,6 +25,7 @@ class OAuthSecurityConfig
 
     override fun configure(security: HttpSecurity) {
         security.httpBasic().disable()
+                .formLogin().disable()
     }
 
     @Bean
